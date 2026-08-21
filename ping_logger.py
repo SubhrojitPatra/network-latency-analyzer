@@ -1,14 +1,30 @@
-# Day-1/2: Network Latency Logger
+# Data Network Latency Logger
 
-import subprocess
+import subprocess 
+# to run ping command and capture its output
 import csv
+# to write the measurement data to a CSV file -- csv means comma-separated values, a common format for storing tabular data
 import os
+# to check if the CSV file already exists
 from datetime import datetime
+# to get the current timestamp for each measurement
 import time
+# to control the duration of the logging and the interval between pings
 
-target_ip = "1.1.1.1"
+target_ip = "1.1.1.1" 
+# This is the IP address of the target server we want to ping. In this case, it's set to Cloudflare's public DNS server 
+
+# Set the duration of the data collection
+start_time = time.time()
+duration_hours = 1
+duration = duration_hours * 60 * 60  # Convert hours to seconds
 
 while True:
+    # Check if the duration has been reached
+    elapsed_time = time.time() - start_time
+    if elapsed_time >= duration:
+        break
+
     # Run one ping
     result = subprocess.run(
         ["ping", "-c", "1", target_ip],
@@ -43,5 +59,5 @@ while True:
 
         writer.writerow([latency_ms, timestamp, target_ip, status])
 
-    # Wait 10 seconds before the next ping
-    time.sleep(10)
+    # Wait 5 seconds before the next ping
+    time.sleep(5)
